@@ -1,0 +1,39 @@
+*{
+    box-sizing: border-box;
+}
+/* 
+.wordle-board {
+    display: flex;
+    width: 300px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+} */
+
+.copy {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.wordle-board {
+    display: grid;
+    gap: 20px;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.tile {
+    height: 20px;
+    width: 20px;
+    border: 2px solid black;
+    flex-direction: row;
+    gap: 10px;
+}

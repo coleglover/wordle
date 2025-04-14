@@ -8,55 +8,54 @@
     <script src = "wordle.js" defer></script>
 </head>
 <body>
-    <div class="container">
+    <div class="wordle-board">
+        <button onClick="generateWord()" class="start-button">start</button>
         <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-        </div>
+            <div class="tile" id="row-0-col-0"></div>
+            <div class="tile" id="row-0-col-1"></div>
+            <div class="tile" id="row-0-col-2"></div>
+            <div class="tile" id="row-0-col-3"></div>
+            <div class="tile" id="row-0-col-4"></div>
+          </div>
+          <div class="row">
+            <div class="tile" id="row-1-col-0"></div>
+            <div class="tile" id="row-1-col-1"></div>
+            <div class="tile" id="row-1-col-2"></div>
+            <div class="tile" id="row-1-col-3"></div>
+            <div class="tile" id="row-1-col-4"></div>
+          </div>
+          <div class="row">
+            <div class="tile" id="row-2-col-0"></div>
+            <div class="tile" id="row-2-col-1"></div>
+            <div class="tile" id="row-2-col-2"></div>
+            <div class="tile" id="row-2-col-3"></div>
+            <div class="tile" id="row-2-col-4"></div>
+          </div>
+          <div class="row">
+            <div class="tile" id="row-3-col-0"></div>
+            <div class="tile" id="row-3-col-1"></div>
+            <div class="tile" id="row-3-col-2"></div>
+            <div class="tile" id="row-3-col-3"></div>
+            <div class="tile" id="row-3-col-4"></div>
+          </div>
+          <div class="row">
+            <div class="tile" id="row-4-col-0"></div>
+            <div class="tile" id="row-4-col-1"></div>
+            <div class="tile" id="row-4-col-2"></div>
+            <div class="tile" id="row-4-col-3"></div>
+            <div class="tile" id="row-4-col-4"></div>
+          </div>
+          <div class="row">
+            <div class="tile" id="row-5-col-0"></div>
+            <div class="tile" id="row-5-col-1"></div>
+            <div class="tile" id="row-5-col-2"></div>
+            <div class="tile" id="row-5-col-3"></div>
+            <div class="tile" id="row-5-col-4"></div>
+          </div>
+          <div>
+            <div class="puzzle-number copy"></div>
+            <div class="word-to-guess copy"></div>
+          </div>
     </div>
 </body>
 </html>
