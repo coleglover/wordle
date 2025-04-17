@@ -15,6 +15,7 @@
 } */
 
 .copy {
+    font-size: 14px;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -22,6 +23,7 @@
     display: grid;
     gap: 20px;
     justify-content: center;
+    padding-top: 2rem;
 }
 
 .row {
@@ -36,4 +38,8 @@
     border: 2px solid black;
     flex-direction: row;
     gap: 10px;
+}
+
+.reveal-button{
+    width: 50%;
 }
