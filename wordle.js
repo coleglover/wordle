@@ -26,6 +26,7 @@ async function generateWord() {
     puzzleNumber = wordleData.puzzleNumber;
 
     console.log(`Puzzle number: ${puzzleNumber}\nWord: ${secretWord}`);
+    console.log(`> row: ${currentRow}`);
   } catch (error) {
     console.log("Error fetching Wordle data:", error);
   }
@@ -36,7 +37,7 @@ function isLetter(letter) {
 }
 
 async function isValidWord() {
-  console.log("validating word: ", currentGuess);
+  console.log("validating guess...", currentGuess);
   try {
     const response = await fetch("https://words.dev-apis.com/validate-word", {
       method: "POST",
@@ -49,30 +50,40 @@ async function isValidWord() {
     });
 
     let validationData = await response.json();
-
-    console.log("> ", validationData.validWord);
+    console.log(validationData);
+    console.log(">", validationData.validWord);
     return validationData.validWord;
   } catch (error) {
     console.log("Error fetching Wordle data:", error);
   }
 }
+
+function validateGuess() {
+  for (let j = 0; j < currentGuess.length; j++) {
+    console.log(currentGuess[j]);
+  }
+}
+
 function updateTile() {
   for (let i = 0; i < 5; i++) {
     const tile = document.getElementById(`row-${currentRow}-col-${i}`);
+    // set tile to currentGuess[i] if it exists OR set it to ""
     tile.textContent = currentGuess[i] || "";
+    //console.log(`current column = ${i}`);
   }
 }
+
 function submitGuess() {
   if (currentGuess.length < 5) {
     alert("Your guess must be 5 characters long!");
   } else if (isValidWord()) {
+    console.log("return type of isValidWord(), ", isValidWord());
+    validateGuess();
     currentRow++;
     currentGuess = "";
     // handle if word is not valid -- maybe move up in logic tree or add "!isValidWord()""
   }
 }
-
-function validateGuess() {}
 
 document.addEventListener("keyup", (event) => {
   if (isLetter(event.key)) {
@@ -83,11 +94,12 @@ document.addEventListener("keyup", (event) => {
     }
   } else if (event.key === "Enter") {
     submitGuess();
+    console.log("> row: ", currentRow);
     //validateGuess(currentGuess);
   } else if (event.key === "Backspace") {
     currentGuess = currentGuess.slice(0, -1);
-    updateTile();
     console.log("current guess: ", currentGuess);
+    updateTile();
   }
 });
 
