@@ -13,6 +13,7 @@
 let secretWord;
 let puzzleNumber;
 let currentGuess = "";
+let score = 0;
 let currentRow = 0;
 
 async function generateWord() {
@@ -26,7 +27,7 @@ async function generateWord() {
     puzzleNumber = wordleData.puzzleNumber;
 
     console.log(`Puzzle number: ${puzzleNumber}\nWord: ${secretWord}`);
-    console.log(`> row: ${currentRow}`);
+    console.log("> guess count: ", currentRow);
   } catch (error) {
     console.log("Error fetching Wordle data:", error);
   }
@@ -49,9 +50,8 @@ async function isValidWord() {
       },
     });
 
-    let validationData = await response.json();
+    const validationData = await response.json();
     console.log(validationData);
-    console.log(">", validationData.validWord);
     return validationData.validWord;
   } catch (error) {
     console.log("Error fetching Wordle data:", error);
@@ -60,8 +60,20 @@ async function isValidWord() {
 
 function validateGuess() {
   for (let j = 0; j < currentGuess.length; j++) {
-    console.log(currentGuess[j]);
+    if (currentGuess[j] === secretWord[j]) {
+      console.log(`${currentGuess[j]} – correct!`);
+      score++;
+    } else if (secretWord.includes(currentGuess[j])) {
+      console.log(`${currentGuess[j]} - misplaced`);
+    } else {
+      console.log(`${currentGuess[j]} - absent`);
+    }
   }
+  if (score === 5) {
+    alert("You win!");
+  }
+  console.log("> score: ", score);
+  score = 0;
 }
 
 function updateTile() {
@@ -73,16 +85,17 @@ function updateTile() {
   }
 }
 
-function submitGuess() {
-  if (currentGuess.length < 5) {
+async function submitGuess() {
+  if (currentGuess.length !== 5) {
     alert("Your guess must be 5 characters long!");
-  } else if (isValidWord()) {
-    console.log("return type of isValidWord(), ", isValidWord());
+  } else if (!(await isValidWord())) {
+    alert("Invalid word. Try again.");
+  } else {
     validateGuess();
     currentRow++;
     currentGuess = "";
-    // handle if word is not valid -- maybe move up in logic tree or add "!isValidWord()""
   }
+  console.log("> guess count: ", currentRow);
 }
 
 document.addEventListener("keyup", (event) => {
@@ -94,8 +107,6 @@ document.addEventListener("keyup", (event) => {
     }
   } else if (event.key === "Enter") {
     submitGuess();
-    console.log("> row: ", currentRow);
-    //validateGuess(currentGuess);
   } else if (event.key === "Backspace") {
     currentGuess = currentGuess.slice(0, -1);
     console.log("current guess: ", currentGuess);
