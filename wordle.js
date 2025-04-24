@@ -1,21 +1,11 @@
-// requirements:
-// + retrieve word (GET) https://words.dev-apis.com/word-of-the-day
-// + retrieve input from users
-// + test if input is a valid word (POST) https://words.dev-apis.com/validate-word
-//  - if true: compare input to test word
-// + repeat until user has guessed:
-//  - the word
-//  - 6 times
-
-// this function is generated when user clicks "start button"
-// function is define as async in order to use await
-
+// global variables that are commonly accessed
 let secretWord;
 let puzzleNumber;
 let currentGuess = "";
 let score = 0;
 let currentRow = 0;
 
+// GET request to word of the day endpoint
 async function generateWord() {
   try {
     // fetch is an async function; returns promise
@@ -23,7 +13,8 @@ async function generateWord() {
     // .json is async; returns a promise
     const wordleData = await response.json();
 
-    secretWord = wordleData.word;
+    // set Wordle uppercase (for comparison)
+    secretWord = wordleData.word.toUpperCase();
     puzzleNumber = wordleData.puzzleNumber;
 
     console.log(`Puzzle number: ${puzzleNumber}\nWord: ${secretWord}`);
@@ -33,10 +24,12 @@ async function generateWord() {
   }
 }
 
+// algorithm that determines if an input is a letter; returns boolean
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
 
+// POST request to word validation endpoint; returns T || F if submission is valid or not
 async function isValidWord() {
   console.log("validating guess...", currentGuess);
   try {
@@ -50,6 +43,7 @@ async function isValidWord() {
       },
     });
 
+    // .json is async; returns a promise
     const validationData = await response.json();
     console.log(validationData);
     return validationData.validWord;
@@ -58,33 +52,51 @@ async function isValidWord() {
   }
 }
 
+// triggered by submitGuess();
+// + this function determines if letters are "correct", "misplaced", or "absent"
+//    - updates styling depending on letter status
+// + creates "used" array of [F,F,F,F,F] and updates values to T if guess[i] is "correct"
 function validateGuess() {
-  for (let j = 0; j < currentGuess.length; j++) {
-    if (currentGuess[j] === secretWord[j]) {
-      console.log(`${currentGuess[j]} – correct!`);
+  const used = Array(currentGuess.length).fill(false);
+  for (let i = 0; i < currentGuess.length; i++) {
+    if (currentGuess[i] === secretWord[i]) {
+      used[i] = "correct";
       score++;
-    } else if (secretWord.includes(currentGuess[j])) {
-      console.log(`${currentGuess[j]} - misplaced`);
-    } else {
-      console.log(`${currentGuess[j]} - absent`);
     }
   }
-  if (score === 5) {
-    alert("You win!");
+
+  // + loop over "used" array and determines "misplaced" or "absent" status of remaining letters
+  //    - this was required for edge cases with double letters in secret word / guesses
+  for (let i = 0; i < currentGuess.length; i++) {
+    const tileColour = document.getElementById(`row-${currentRow}-col-${i}`);
+    if (used[i] == "correct") {
+      console.log(`${currentGuess[i]} – ${used[i]}!`);
+      tileColour.style.backgroundColor = "rgb(106, 170, 100)";
+      tileColour.style.color = "white";
+    } else if (secretWord.includes(currentGuess[i])) {
+      //used[i] == true // !!used[i]
+      console.log(`${currentGuess[i]} - misplaced`);
+      tileColour.style.backgroundColor = "rgb(201, 180, 88)";
+      tileColour.style.color = "white";
+    } else {
+      console.log(`${currentGuess[i]} - absent`);
+      tileColour.style.backgroundColor = "rgb(120, 124, 126)";
+      tileColour.style.color = "white";
+    }
   }
   console.log("> score: ", score);
-  score = 0;
 }
 
+// triggered by "keyUp" eventListener; update tiles as user types
 function updateTile() {
   for (let i = 0; i < 5; i++) {
     const tile = document.getElementById(`row-${currentRow}-col-${i}`);
     // set tile to currentGuess[i] if it exists OR set it to ""
     tile.textContent = currentGuess[i] || "";
-    //console.log(`current column = ${i}`);
   }
 }
 
+// handle different submission cases from user
 async function submitGuess() {
   if (currentGuess.length !== 5) {
     alert("Your guess must be 5 characters long!");
@@ -92,16 +104,27 @@ async function submitGuess() {
     alert("Invalid word. Try again.");
   } else {
     validateGuess();
+
+    // check if user guessed secret word
+    if (score === 5 && currentRow > 0) {
+      alert(`Congratulations! You won in ${currentRow + 1} guesses.`);
+      return;
+    } else if (score === 5 && currentRow === 0) {
+      alert(`Congratulations! You won in ${currentRow + 1} guess.`);
+      return;
+    }
     currentRow++;
     currentGuess = "";
+    score = 0;
   }
   console.log("> guess count: ", currentRow);
 }
 
+// listen to user inputs and parse them accordingly
 document.addEventListener("keyup", (event) => {
   if (isLetter(event.key)) {
     if (currentGuess.length < 5) {
-      currentGuess += event.key;
+      currentGuess += event.key.toUpperCase();
       console.log("current guess: ", currentGuess);
       updateTile();
     }
